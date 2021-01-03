@@ -4,11 +4,6 @@
 #include <algorithm>
 using namespace std;
 
-std::ostream &operator<<(std::ostream &os, const point &p) {
-    os << "x: " << p.get_x() << "\ty: " << p.get_y() << "\tangle: " << p.get_angle();
-    return os;
-}
-
 int main() {
 
     int n,m;
