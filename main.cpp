@@ -52,7 +52,7 @@ int main() {
 
     cout << "Overlapping polygon for all the given polygons (basically overlapping area)" << endl;
     for(point p : currentWindow) {
-        cout << p.x << " " << p.y << endl;
+        cout << p << endl;
     }
     return 0;
 }

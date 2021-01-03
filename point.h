@@ -22,18 +22,10 @@ class point {
         return( atan( double(p.y - this->y) / double(p.x - this->x) ) );
     }
 
-    //for sorting based on angles
-    //If you'd like, you can also modify the operator to behave differently,
-    //such as checking the radii of the points if the lengths are the same - 
-    //this would require some modification of the point class. 
+    //For sorting based on angles
     bool operator<(const point &p) const {
         return(angle <= p.angle);
     }
-
-
-    //and then there's these things
-    void set_x(double xin) { x = xin; }
-    void set_y(double yin) { y = yin; }
     void set_angle(double d) { angle = d; }
     void set_dist(double d) { dist =  d; }
 
