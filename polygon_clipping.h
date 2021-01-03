@@ -1,20 +1,22 @@
 #include <vector>
 #include "point.h"
 #include <cmath>
+#include <set>
 
 using namespace std;
 
 // just to help with printing of point datatype.
-std::ostream &operator<<(std::ostream &os, const point &p) {
+ostream &operator<<(ostream &os, const point &p) {
     os << "x: " << p.x << "\ty: " << p.y ;
     return os;
 }
 
-
 // check if a point is on the LEFT side of an edge
 bool inside(point p, point p1, point p2)
 {
-    return (p2.y - p1.y) * p.x + (p1.x - p2.x) * p.y + (p2.x * p1.y - p1.x * p2.y) < 0;
+    int position = (p2.x - p1.x) * (p.y - p1.y) - (p2.y - p1.y) * (p.x - p1.x);
+    if(position>=0) return true;
+    return false;
 }
 
 // calculate intersection point
@@ -54,7 +56,9 @@ vector<point> SutherlandHodgman(vector<point>& subjectPolygon, vector<point>& cl
         newPolygon.push_back(subjectPolygon[i]);
  
     int newPolygonSize = subjectPolygonSize;
- 
+
+    set <point> uniquePoints;
+
     for(int j = 0; j < clipPolygonSize; j++)
     {
         for(int k = 0; k < newPolygonSize; k++){ inputPolygon.push_back(newPolygon[k]); }
@@ -62,35 +66,29 @@ vector<point> SutherlandHodgman(vector<point>& subjectPolygon, vector<point>& cl
         int counter = 0;
         cp1 = clipPolygon[j];
         cp2 = clipPolygon[(j + 1) % clipPolygonSize];
-        cout << "CLIPPING POLYGON" << endl;
-        cout << cp1 << " \t " << cp2 << endl;
-        cout << endl;
+        
         for(int i = 0; i < newPolygonSize; i++)
         {
             s = inputPolygon[i];
             e = inputPolygon[(i + 1) % newPolygonSize];
-            
+            // cout << s << " " << e << endl;
             // Case 1: Both the vertex are inside.
             if(inside(s, cp1, cp2) && inside(e, cp1, cp2)) {
-                cout << "BOTH inside " << s << " " << e << endl;
+                // cout << "BOTH inside " << endl;
                 newPolygon.push_back(e);
             }
 
             // Case 2: First vertex is outside while second one is inside:
-            // Both the point of intersection of the edge with the clip boundary
-            // and the second vertex are added to the output list
             else if(!inside(s, cp1, cp2) && inside(e, cp1, cp2)) {
                 newPolygon.push_back(intersection(cp1, cp2, s, e));
-                cout << " INside: " << e << " \t" << intersection(cp1, cp2, s, e) << endl;
+                // cout << " E INside: " << " \t" << intersection(cp1, cp2, s, e) << endl;
                 newPolygon.push_back(e);
             }
  
             // Case 3: First vertex is inside while second one is outside:
-            // Only the point of intersection of the edge with the clip boundary
-            // is added to the output list
             else if(inside(s, cp1, cp2) && !inside(e, cp1, cp2)) {
                 newPolygon.push_back(intersection(cp1, cp2, s, e));
-                cout << " INside: " << s << " \t" << intersection(cp1, cp2, s, e) << endl;
+                // cout << " S INside: \t" << intersection(cp1, cp2, s, e) << endl;
             }
         }
         // set new polygon size
@@ -98,9 +96,13 @@ vector<point> SutherlandHodgman(vector<point>& subjectPolygon, vector<point>& cl
     }
 
     cout << "Clipped polygon points:" << endl;
-    for(int i = 0; i < newPolygonSize; i++)
-        cout << "(" << newPolygon[i].x << ", " << newPolygon[i].y << ")" << endl;
+    for(int i = 0; i < newPolygonSize; i++) {
+        if(uniquePoints.find(newPolygon[i]) != uniquePoints.end()) continue;
+        uniquePoints.insert(newPolygon[i]);
+    }
 
+    for( point p : newPolygon) cout << p << endl;
+    
     cout << polygonArea(newPolygon) << endl;
     return newPolygon;
 }

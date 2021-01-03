@@ -22,16 +22,8 @@ class point {
         return( atan( double(p.y - this->y) / double(p.x - this->x) ) );
     }
 
-    //For sorting based on angles
-    bool operator<(const point &p) const {
-        return(angle <= p.angle);
-    }
     void set_angle(double d) { angle = d; }
     void set_dist(double d) { dist =  d; }
-
-    double get_x() const { return x; }
-    double get_y() const { return y; }
-    double get_angle() const { return angle; }
 
     double x;
     double y;

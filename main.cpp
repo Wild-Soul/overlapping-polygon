@@ -4,6 +4,11 @@
 #include <algorithm>
 using namespace std;
 
+//For sorting based on angles
+bool operator<(const point& a, const point& b) {
+    return(a.angle <= b.angle);
+}
+
 int main() {
 
     int n,m;
@@ -32,12 +37,12 @@ int main() {
             double d = sqrt( (center.x-p.x)*(center.x-p.x)+(center.y-p.y)*(center.y-p.y) );
             p.set_dist(d);
         }
-        //Precalculate and store their area.
+        
         sort(polys[i].begin(), polys[i].end());
-        // for(int j=0;  j<polys[i].size(); j++) {
-        //     cout << polys[i][j]  << endl;
-        // }
-        // cout << "============" << endl;
+        for(int j=0;  j<polys[i].size(); j++) {
+            cout << polys[i][j]  << endl;
+        }
+        cout << "============" << endl;
     }
     
     vector<point> currentWindow = polys[0];
@@ -45,9 +50,5 @@ int main() {
         currentWindow = SutherlandHodgman(currentWindow, polys[i]);
     }
 
-    cout << "Overlapping polygon for all the given polygons (basically overlapping area)" << endl;
-    for(point p : currentWindow) {
-        cout << p << endl;
-    }
     return 0;
 }
